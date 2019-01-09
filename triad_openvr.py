@@ -31,6 +31,27 @@ def convert_to_quaternion(pose_mat):
     z = pose_mat[2][3]
     return [x,y,z,r_w,r_x,r_y,r_z]
 
+#Based on RigidTransform and GetRotation functions of SteamVR_utils.cs
+def convert_to_quaternion_for_unity(pose_mat):
+    pose_mat[0][2] *= -1;
+    pose_mat[1][2] *= -1;
+    pose_mat[2][0] *= -1;
+    pose_mat[2][1] *= -1;
+    pose_mat[2][3] *= -1;
+
+    r_w = math.sqrt( max( 0, 1 + pose_mat[0][0] + pose_mat[1][1] + pose_mat[2][2] ) ) / 2
+    r_x = math.sqrt( max( 0, 1 + pose_mat[0][0] - pose_mat[1][1] - pose_mat[2][2] ) ) / 2
+    r_y = math.sqrt( max( 0, 1 - pose_mat[0][0] + pose_mat[1][1] - pose_mat[2][2] ) ) / 2
+    r_z = math.sqrt( max( 0, 1 - pose_mat[0][0] - pose_mat[1][1] + pose_mat[2][2] ) ) / 2
+    r_x = math.copysign(r_x, ( pose_mat[2][1] - pose_mat[1][2] ) )
+    r_y = math.copysign(r_y, ( pose_mat[0][2] - pose_mat[2][0] ) )
+    r_z = math.copysign(r_z, ( pose_mat[1][0] - pose_mat[0][1] ) )
+
+    x = pose_mat[0][3]
+    y = pose_mat[1][3]
+    z = pose_mat[2][3]
+    return [x,y,z,r_x,r_y,r_z,r_w]
+
 #Define a class to make it easy to append pose matricies and convert to both Euler and Quaternion for plotting
 class pose_sample_buffer():
     def __init__(self):
@@ -94,6 +115,10 @@ class vr_tracked_device():
     def get_pose_quaternion(self):
         pose = self.vr.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0,openvr.k_unMaxTrackedDeviceCount)
         return convert_to_quaternion(pose[self.index].mDeviceToAbsoluteTracking)
+
+    def get_pose_quaternion_for_unity(self):
+        pose = self.vr.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0,openvr.k_unMaxTrackedDeviceCount)
+        return convert_to_quaternion_for_unity(pose[self.index].mDeviceToAbsoluteTracking)
 
 class vr_tracking_reference(vr_tracked_device):
     def get_mode(self):

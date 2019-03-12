@@ -117,7 +117,11 @@ class vr_tracked_device():
         return convert_to_quaternion(pose[self.index].mDeviceToAbsoluteTracking)
 
     def get_pose_quaternion_for_unity(self):
-        pose = self.vr.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0.06,openvr.k_unMaxTrackedDeviceCount)
+        pose = self.vr.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, 0,openvr.k_unMaxTrackedDeviceCount)
+        return convert_to_quaternion_for_unity(pose[self.index].mDeviceToAbsoluteTracking)
+
+    def get_pose_quaternion_for_unity_with_prediction(self, fPredictedSecondsToPhotonsFromNow):
+        pose = self.vr.getDeviceToAbsoluteTrackingPose(openvr.TrackingUniverseStanding, fPredictedSecondsToPhotonsFromNow,openvr.k_unMaxTrackedDeviceCount)
         return convert_to_quaternion_for_unity(pose[self.index].mDeviceToAbsoluteTracking)
 
 class vr_tracking_reference(vr_tracked_device):

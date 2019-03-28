@@ -59,7 +59,7 @@ if interval:
         sent = sock.sendto(struct.pack('d'*len(data), *data), server_address)        
         sleep_time = interval-(time.time()-start)
 
-        if(len(midi_port_names) > 0):
+        if(len(midi_port_names) == 2):
             for msg in midi_input_port:
                 print(msg)
         

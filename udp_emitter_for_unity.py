@@ -10,7 +10,7 @@ from pynput.keyboard import Key, Listener
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', '-p', help= "UDP port", type = int, default= 8051)
 parser.add_argument('--tracker', '-t', help= "Tracker ID", type = str, default= 'tracker_1')
-parser.add_argument('--seconds', '-s', help= "Predicted Seconds to Photons from Now", type = float, default= 0.08)
+parser.add_argument('--seconds', '-s', help= "Predicted Seconds to Photons from Now", type = float, default= 0.04)
 args = parser.parse_args()
 
 predictedSecondsToPhotonsFromNow = args.seconds
